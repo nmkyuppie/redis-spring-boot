@@ -9,7 +9,7 @@
     <version>3.0.11</version>
     <relativePath/> <!-- lookup parent from repository -->
   </parent>
-  <groupId>com.github.jawale</groupId>
+  <groupId>com.natwest.redis</groupId>
   <artifactId>spring-redis-example</artifactId>
   <version>0.1-SNAPSHOT</version>
   <name>spring-redis-example</name>

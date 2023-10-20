@@ -13,6 +13,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.utility.DockerImageName;
 
+import java.util.List;
+
 @SpringBootTest()
 @RunWith(SpringRunner.class)
 class UserServiceTest{
@@ -30,11 +32,12 @@ class UserServiceTest{
 
   @BeforeAll
   public static void beforeAll() {
-    redis = new GenericContainer<>(DockerImageName.parse("redis:6.2.4-alpine"))
-        .withExposedPorts(6379);
+    redis = new GenericContainer<>(DockerImageName.parse("redis:6.2.4-alpine")).withExposedPorts(6379);
+    redis.setPortBindings(List.of("6379:6379"));
     redis.start();
     System.setProperty("spring.redis.host", redis.getHost());
-    System.setProperty("spring.redis.port", redis.getMappedPort(6379).toString());
+    System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% "+ redis.getFirstMappedPort());
+    System.setProperty("spring.redis.port", redis.getFirstMappedPort().toString());
   }
 
   @AfterAll
@@ -44,15 +47,15 @@ class UserServiceTest{
 
   @Test
   public void testUpdateStoredUser() {
-    userService.save(new User("jawale", 0, 0, 0, 2, 2, 2));
+    userService.save(new User("Manikandan", 0, 0, 0, 2, 2, 2));
 
-    User user = userService.getUser("jawale");
+    User user = userService.getUser("Manikandan");
     assertThat(user).isNotNull();
 
     user.setLostCounter(user.getLostCounter() + 1);
     userService.save(user);
 
-    user = userService.getUser("jawale");
+    user = userService.getUser("Manikandan");
     assertEquals(1, user.getLostCounter());
   }
 }
